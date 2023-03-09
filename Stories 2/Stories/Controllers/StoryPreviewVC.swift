@@ -216,7 +216,41 @@ extension StoryPreviewVC:UICollectionViewDelegate,UICollectionViewDataSource{
             previewCV.addGestureRecognizer(longPress_gesture)
             //cell.backgroundColor = UIColor.clear
             //cell.contentView.backgroundColor = .clear
+           // if indexPath.row == 0       {
             
+            print("Frame of Grid View: \(cell.gridView.frame)")
+            
+            for view in cell.gridView.subviews{
+                view.removeFromSuperview()
+            }
+            
+                let img = UIImageView()
+                img.image = UIImage(named: "tappableView")
+                img.contentMode = .scaleAspectFit
+                        
+            img.frame = self.view.fetchFrameForStoryStcker(for: indexPath.row)
+            //cell.gridView.getGridFrame(for: indexPath.row) ?? CGRect.zero
+            
+            
+            var i = 0
+            while(i<6)  {
+                let view = UIView()
+                view.backgroundColor = .clear
+                view.layer.borderWidth = 0.5
+                view.layer.borderColor = UIColor.systemYellow.cgColor
+                
+                view.frame = self.view.fetchFrameForStoryStcker(for: i)
+                cell.gridView.addSubview(view)
+                i+=1
+            }
+            
+                cell.gridView.addSubview(img)
+            //cell.contentView.addSubview(img)
+            print("Frame of Inner View \(indexPath.row): \(self.view.fetchFrameForStoryStcker(for: indexPath.row))")
+                
+//            }   else    {
+//
+//            }
             cell.previewImgView.image = UIImage(named: imageArr[indexPath.row])
             let getAverageColor = cell.previewImgView.image?.averageColor2
             

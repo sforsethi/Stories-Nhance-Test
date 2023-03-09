@@ -12,4 +12,6 @@ class StoryPreviewCollecionCell: UICollectionViewCell {
     @IBOutlet weak var topGradientIV: UIImageView!
     @IBOutlet weak var previewImgView: UIImageView!
     
-}
+    @IBOutlet weak var gridView: CustomStoryGrid!
+    
+    }

@@ -60,6 +60,7 @@
 		C4DF996B29B9AEC0004A66DA /* UIImage+PaletteExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DF994E29B9AEC0004A66DA /* UIImage+PaletteExtension.swift */; };
 		C4DF996C29B9AEC0004A66DA /* RGBColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DF994F29B9AEC0004A66DA /* RGBColor.swift */; };
 		C4DF996F29B9AEF7004A66DA /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DF996E29B9AEF6004A66DA /* Extension.swift */; };
+		DF4680B629B9CA1B00D256D4 /* CustomStoryGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF4680B529B9CA1B00D256D4 /* CustomStoryGrid.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -145,6 +146,7 @@
 		C4DF994F29B9AEC0004A66DA /* RGBColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RGBColor.swift; sourceTree = "<group>"; };
 		C4DF996E29B9AEF6004A66DA /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		DDE521262E9193E1DBDCD5E9 /* Pods_Stories_StoriesUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Stories_StoriesUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DF4680B529B9CA1B00D256D4 /* CustomStoryGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomStoryGrid.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -259,6 +261,7 @@
 			isa = PBXGroup;
 			children = (
 				C4DF98BD29AF6740004A66DA /* Extensions.swift */,
+				DF4680B529B9CA1B00D256D4 /* CustomStoryGrid.swift */,
 			);
 			path = Commons;
 			sourceTree = "<group>";
@@ -370,7 +373,6 @@
 				185FBE738173802B037E02B2 /* Pods-StoriesTests.debug.xcconfig */,
 				ACEAC82D9677D9F12A919D2F /* Pods-StoriesTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -653,6 +655,7 @@
 				C4DF995D29B9AEC0004A66DA /* RelativeLuminance.swift in Sources */,
 				C4DF992829B9AE7C004A66DA /* StoryDetailCollecionCell.swift in Sources */,
 				C4DF988629AF6151004A66DA /* AppDelegate.swift in Sources */,
+				DF4680B629B9CA1B00D256D4 /* CustomStoryGrid.swift in Sources */,
 				C4DF995329B9AEC0004A66DA /* RGB.swift in Sources */,
 				C4DF996629B9AEC0004A66DA /* ColorHistogram.swift in Sources */,
 				C4DF988829AF6151004A66DA /* SceneDelegate.swift in Sources */,
