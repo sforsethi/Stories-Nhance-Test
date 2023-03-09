@@ -147,7 +147,13 @@ extension StoryPreviewVC{
     func startStoryProgress(){
         self.progress.completedUnitCount = 0
         if let cell = progressCV.cellForItem(at: IndexPath(row: storyIndex, section: 0)) as? StoryProgressCollecionCell{
-            Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { timer in
+            var time = 0.2
+            if storyIndex == 1  {
+                time = 10
+            }   else    {
+                time = 0.2
+            }
+            Timer.scheduledTimer(withTimeInterval: time, repeats: true) { timer in
                 guard self.progress.isFinished == false else{
                     timer.invalidate()
                     print("Finished")
@@ -255,6 +261,13 @@ extension StoryPreviewVC:UICollectionViewDelegate,UICollectionViewDataSource{
             let getAverageColor = cell.previewImgView.image?.averageColor2
             
             cell.topGradientIV.backgroundColor = getAverageColor
+            
+            if indexPath.row == 1   {
+                cell.videoPlayer.play(for: URL(string: "https://storage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4")!)
+                cell.videoPlayer.isHidden = false
+            }   else    {
+                cell.videoPlayer.isHidden = true
+            }
             
             let arraySlice = dominantColors.suffix(3)
             let newArray = Array(arraySlice)

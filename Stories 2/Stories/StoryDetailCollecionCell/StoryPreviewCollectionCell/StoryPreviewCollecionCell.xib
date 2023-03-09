@@ -28,6 +28,10 @@
                             <constraint firstAttribute="height" constant="270" id="bgM-6s-FOt"/>
                         </constraints>
                     </imageView>
+                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gh7-bE-fP0" customClass="VideoPlayerView" customModule="GSPlayer">
+                        <rect key="frame" x="0.0" y="0.0" width="361" height="667"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HQb-oZ-g2D">
                         <rect key="frame" x="0.0" y="0.0" width="361" height="667"/>
                     </imageView>
@@ -37,6 +41,7 @@
                     </view>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="gh7-bE-fP0" firstAttribute="top" secondItem="jsD-dV-FV2" secondAttribute="top" id="1Kw-XP-A3k"/>
                     <constraint firstItem="HQb-oZ-g2D" firstAttribute="leading" secondItem="jsD-dV-FV2" secondAttribute="leading" id="1aU-nT-Zld"/>
                     <constraint firstAttribute="trailing" secondItem="i1S-km-zdp" secondAttribute="trailing" id="1fx-R5-nDP"/>
                     <constraint firstItem="chu-Pu-Ofn" firstAttribute="top" secondItem="jsD-dV-FV2" secondAttribute="top" id="33w-5S-9xA"/>
@@ -54,7 +59,10 @@
                     <constraint firstItem="Eef-UK-sN3" firstAttribute="centerX" secondItem="jsD-dV-FV2" secondAttribute="centerX" id="Zas-0j-oYG"/>
                     <constraint firstItem="bMI-dW-5IQ" firstAttribute="top" secondItem="jsD-dV-FV2" secondAttribute="top" id="b2A-CE-ME3"/>
                     <constraint firstItem="bMI-dW-5IQ" firstAttribute="leading" secondItem="jsD-dV-FV2" secondAttribute="leading" constant="5" id="bxW-XA-nZc"/>
+                    <constraint firstAttribute="bottom" secondItem="gh7-bE-fP0" secondAttribute="bottom" id="fzo-b4-I4Y"/>
                     <constraint firstItem="i1S-km-zdp" firstAttribute="top" secondItem="Eef-UK-sN3" secondAttribute="bottom" id="hIn-x3-KzW"/>
+                    <constraint firstItem="gh7-bE-fP0" firstAttribute="leading" secondItem="jsD-dV-FV2" secondAttribute="leading" id="hrD-cO-UUA"/>
+                    <constraint firstAttribute="trailing" secondItem="gh7-bE-fP0" secondAttribute="trailing" id="pxr-w6-QdF"/>
                     <constraint firstAttribute="bottom" secondItem="HQb-oZ-g2D" secondAttribute="bottom" id="s9J-hM-SYp"/>
                 </constraints>
             </collectionViewCellContentView>
@@ -64,6 +72,7 @@
                 <outlet property="gridView" destination="chu-Pu-Ofn" id="kbn-qb-sro"/>
                 <outlet property="previewImgView" destination="Eef-UK-sN3" id="zah-s3-kXo"/>
                 <outlet property="topGradientIV" destination="bMI-dW-5IQ" id="aLe-Qd-13U"/>
+                <outlet property="videoPlayer" destination="gh7-bE-fP0" id="XtV-kD-uZ9"/>
             </connections>
             <point key="canvasLocation" x="-547.32824427480909" y="-181.33802816901408"/>
         </collectionViewCell>

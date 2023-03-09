@@ -8,6 +8,7 @@ target 'Stories' do
   # Pods for Stories
   pod 'SwiftPriorityQueue', '~> 1.1.2'
   pod 'AnimatedCollectionViewLayout'
+  pod 'GSPlayer'
 
   target 'StoriesTests' do
     inherit! :search_paths
