@@ -84,7 +84,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pexels-julie-aagaard-1368520 1" translatesAutoresizingMaskIntoConstraints="NO" id="bEj-Z7-WFL">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="starbucks" translatesAutoresizingMaskIntoConstraints="NO" id="bEj-Z7-WFL">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                             </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="top-shadow" translatesAutoresizingMaskIntoConstraints="NO" id="hVW-Oy-Cpl">
@@ -264,15 +264,106 @@
             </objects>
             <point key="canvasLocation" x="773.28244274809163" y="-382.3943661971831"/>
         </scene>
+        <!--Story PreviewVC-->
+        <scene sceneID="GBz-Jj-1WR">
+            <objects>
+                <viewController storyboardIdentifier="StoryPreviewVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="z3E-NZ-cza" customClass="StoryPreviewVC" customModule="NhanceStories" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="SiG-OP-6Vq">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="101" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="UfV-zt-rGu">
+                                <rect key="frame" x="0.0" y="59" width="393" height="10"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="10" id="PO6-sG-2pP"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="w3y-eb-oRX">
+                                    <size key="itemSize" width="154" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells/>
+                                <connections>
+                                    <outlet property="dataSource" destination="z3E-NZ-cza" id="eEw-7Y-0mV"/>
+                                    <outlet property="delegate" destination="z3E-NZ-cza" id="QPB-W0-bQt"/>
+                                </connections>
+                            </collectionView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" tag="102" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="MFZ-F7-UmS">
+                                <rect key="frame" x="0.0" y="69" width="393" height="749"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Bc8-RT-jwO" customClass="AnimatedCollectionViewLayout" customModule="AnimatedCollectionViewLayout">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells/>
+                                <connections>
+                                    <outlet property="dataSource" destination="z3E-NZ-cza" id="eZi-Yu-uYw"/>
+                                    <outlet property="delegate" destination="z3E-NZ-cza" id="hhz-xB-Li6"/>
+                                </connections>
+                            </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OzX-a0-SZ1">
+                                <rect key="frame" x="322" y="104" width="25" height="25"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="25" id="6It-Q9-VAf"/>
+                                    <constraint firstAttribute="height" constant="25" id="Daz-we-z2d"/>
+                                </constraints>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="cancel-story"/>
+                                <connections>
+                                    <action selector="cancelBtnTap:" destination="z3E-NZ-cza" eventType="touchUpInside" id="Nd2-56-D5l"/>
+                                </connections>
+                            </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Starbucks" translatesAutoresizingMaskIntoConstraints="NO" id="OGq-GH-pzR">
+                                <rect key="frame" x="20" y="94" width="44" height="44"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Starbucks" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cKk-xp-tRk">
+                                <rect key="frame" x="84" y="99.333333333333329" width="136" height="33.666666666666671"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="28"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="7BD-nb-CO4"/>
+                        <constraints>
+                            <constraint firstItem="OzX-a0-SZ1" firstAttribute="top" secondItem="7BD-nb-CO4" secondAttribute="top" constant="45" id="7Fi-gn-NTH"/>
+                            <constraint firstItem="UfV-zt-rGu" firstAttribute="trailing" secondItem="7BD-nb-CO4" secondAttribute="trailing" id="Cjo-0j-HrN"/>
+                            <constraint firstItem="cKk-xp-tRk" firstAttribute="leading" secondItem="OGq-GH-pzR" secondAttribute="trailing" constant="20" id="Esy-hc-dcK"/>
+                            <constraint firstItem="MFZ-F7-UmS" firstAttribute="top" secondItem="UfV-zt-rGu" secondAttribute="bottom" id="LNZ-B8-60C"/>
+                            <constraint firstItem="cKk-xp-tRk" firstAttribute="centerY" secondItem="OGq-GH-pzR" secondAttribute="centerY" id="NQ8-4e-DZV"/>
+                            <constraint firstItem="7BD-nb-CO4" firstAttribute="bottom" secondItem="MFZ-F7-UmS" secondAttribute="bottom" id="SIb-N4-uc3"/>
+                            <constraint firstItem="UfV-zt-rGu" firstAttribute="top" secondItem="7BD-nb-CO4" secondAttribute="top" id="Sdz-wa-YZz"/>
+                            <constraint firstItem="7BD-nb-CO4" firstAttribute="trailing" secondItem="OzX-a0-SZ1" secondAttribute="trailing" constant="46" id="Xso-cf-YWh"/>
+                            <constraint firstItem="OGq-GH-pzR" firstAttribute="leading" secondItem="7BD-nb-CO4" secondAttribute="leading" constant="20" id="aMf-C8-Bex"/>
+                            <constraint firstItem="MFZ-F7-UmS" firstAttribute="leading" secondItem="7BD-nb-CO4" secondAttribute="leading" id="aPc-OV-66l"/>
+                            <constraint firstItem="OGq-GH-pzR" firstAttribute="top" secondItem="7BD-nb-CO4" secondAttribute="top" constant="35" id="iRJ-TE-drM"/>
+                            <constraint firstItem="MFZ-F7-UmS" firstAttribute="trailing" secondItem="7BD-nb-CO4" secondAttribute="trailing" id="mBq-bC-1GI"/>
+                            <constraint firstItem="UfV-zt-rGu" firstAttribute="leading" secondItem="7BD-nb-CO4" secondAttribute="leading" id="zF4-uK-LBD"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="previewCV" destination="MFZ-F7-UmS" id="V11-ov-kpT"/>
+                        <outlet property="progressCV" destination="UfV-zt-rGu" id="YPU-Yg-9VV"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0HG-AO-2R1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="9.9236641221374047" y="-103.52112676056339"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="Starbucks" width="44" height="44"/>
         <image name="bottom-shadow" width="390" height="180"/>
+        <image name="cancel-story" width="18.666666030883789" height="18.666666030883789"/>
         <image name="ic-close" width="32" height="32"/>
         <image name="ic-heart-unfilled" width="32" height="32"/>
         <image name="ic-more" width="20" height="4"/>
         <image name="ic-share" width="32" height="32"/>
         <image name="logo-4" width="56" height="56"/>
-        <image name="pexels-julie-aagaard-1368520 1" width="390" height="826"/>
+        <image name="starbucks" width="390" height="826"/>
         <image name="top-shadow" width="390" height="220"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

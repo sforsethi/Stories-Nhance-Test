@@ -12,6 +12,7 @@ class StoriesVC: UIViewController {
     let firstColor = UIColor(red: 199/255, green: 255/255, blue: 211/255, alpha: 1)
     let secondColor = UIColor(red: 0, green: 123/255, blue: 161/255, alpha: 1)
     let thirdColor = UIColor(red: 59/255, green: 88/255, blue: 161/255, alpha: 1)
+    let grayColor = UIColor(red: 191/255, green: 191/255, blue: 191/255, alpha: 1)
     
     var retailerLogos = ["logo-1", "logo-2", "logo-3", "logo-4", "logo-5"]
     var retailerNames = ["HM", "Nike", "PVR", "Starbucks", "ZARA"]
@@ -42,17 +43,16 @@ extension StoriesVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "StoriesCVCell", for: indexPath) as! StoriesCVCell
+        cell.retailerLogoImage.image = UIImage(named: retailerLogos[indexPath.row])
+        
         numSize = storiesCount[indexPath.row]
-        cell.outerView.layer.cornerRadius = cell.bounds.size.height / 2
+        cell.outerView.layer.cornerRadius = cell.outerView.frame.height / 2
         cell.outerView.clipsToBounds = true
         
-        let gradient = CAGradientLayer()
-        gradient.frame = cell.outerView.bounds
-        gradient.colors = [firstColor.cgColor, secondColor.cgColor, thirdColor.cgColor]
-        gradient.startPoint = CGPoint(x: 0, y: 0)
-        gradient.endPoint = CGPoint(x: 1, y: 1)
+        cell.storiesView.layer.cornerRadius = cell.storiesView.frame.height / 2
+        cell.storiesView.clipsToBounds = true
     
-        let shape = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: cell.outerView.bounds.width, height: cell.outerView.bounds.height))
+        let shape = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: cell.storiesView.bounds.width, height: cell.storiesView.bounds.height))
         var segments: [CAShapeLayer] = []
         let segmentAngle: CGFloat = 1.0 / CGFloat(numSize)
         
@@ -60,33 +60,47 @@ extension StoriesVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
             let shapeLayer = CAShapeLayer()
             shapeLayer.path = shape.cgPath
             shapeLayer.strokeStart = segmentAngle * CGFloat(i)
+//            shapeLayer.strokeStart = segmentAngle * CGFloat(numSize - (i + 1))
             
             if numSize == 1 {
                 let gapSize: CGFloat = 0
                 shapeLayer.strokeEnd = shapeLayer.strokeStart + segmentAngle - gapSize
-                shapeLayer.lineWidth = 3
+                shapeLayer.lineWidth = 4
             }
             else {
                 let gapSize: CGFloat = 0.008
                 shapeLayer.strokeEnd = shapeLayer.strokeStart + segmentAngle - gapSize
-                shapeLayer.lineWidth = 3
+                shapeLayer.lineWidth = 4
             }
             
-            if i == 1 {
-                shapeLayer.strokeColor = UIColor(red: 191/255, green: 191/255, blue: 191/255, alpha: 1).cgColor
+            if i == 0 {
+                shapeLayer.strokeColor = grayColor.withAlphaComponent(0.1).cgColor
+//                shapeLayer.strokeColor = UIColor.clear.cgColor
             }
             else {
-                shapeLayer.strokeColor = UIColor.systemRed.cgColor
+                shapeLayer.strokeColor = thirdColor.cgColor
             }
             
             shapeLayer.fillColor = UIColor.clear.cgColor
-                
-            gradient.mask = shapeLayer
-        
             segments.insert(shapeLayer, at: i)
-            cell.gradientView.layer.addSublayer(segments[i])
-            cell.outerView.layer.addSublayer(gradient)
+            cell.storiesView.layer.addSublayer(segments[i])
+            
+            //MARK: Gradient Segment Color
+            let gradient = CAGradientLayer()
+            gradient.frame = CGRect(origin: CGPoint.zero, size: cell.storiesView.frame.size)
+            gradient.colors = [firstColor.cgColor, secondColor.cgColor, thirdColor.cgColor]
+            gradient.mask = shapeLayer
+            cell.storiesView.layer.addSublayer(gradient)
+            gradient.startPoint = CGPoint(x: 0, y: 0)
+            gradient.endPoint = CGPoint(x: 1, y: 1)
         }
+        
+        UIView.performWithoutAnimation {
+//            cell.storiesView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
+            cell.storiesView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi * 3/2))
+            cell.retailerLogoImage.transform = cell.storiesView.transform.inverted()
+        }
+        
         return cell
     }
     
@@ -95,11 +109,15 @@ extension StoriesVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "StoryViewVC") as! StoryViewVC
-        vc.retailerLogos = retailerLogos[indexPath.row]
-        vc.retailerNames = retailerNames[indexPath.row]
-        vc.storyItems = storyItems[indexPath.row]
-        vc.modalPresentationStyle = .fullScreen
-        self.present(vc, animated: true)
+//        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "StoryViewVC") as! StoryViewVC
+//        vc.retailerLogos = retailerLogos[indexPath.row]
+//        vc.retailerNames = retailerNames[indexPath.row]
+//        vc.storyItems = storyItems[indexPath.row]
+//        vc.modalPresentationStyle = .fullScreen
+//        self.present(vc, animated: true)
+            let vc = storyboard?.instantiateViewController(withIdentifier: "StoryPreviewVC") as! StoryPreviewVC
+            vc.totalStoryIndex = storiesCount[indexPath.row]
+            vc.modalPresentationStyle = .fullScreen
+            self.present(vc, animated: true)
     }
 }
