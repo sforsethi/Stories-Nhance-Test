@@ -7,6 +7,8 @@
 
 import UIKit
 import AnimatedCollectionViewLayout
+import PanModal
+
 class StoryPreviewVC: UIViewController {
     
     private var currentImage: UIImage! {
@@ -25,6 +27,13 @@ class StoryPreviewVC: UIViewController {
             previewCV.reloadData()
         }
     }
+    
+    var storyTimer: Timer? {
+        willSet {
+          storyTimer?.invalidate()
+        }
+      }
+    
     @IBOutlet weak var previewCV: UICollectionView!
     @IBOutlet weak var progressCV: UICollectionView!
     
@@ -45,6 +54,10 @@ class StoryPreviewVC: UIViewController {
     
     var darkColorArr:[UIColor] = []
     var lightColorArr:[UIColor] = []
+    
+    var isLikeButtonTapped = false
+    var isPaused: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         previewCV?.isPagingEnabled = true
@@ -117,7 +130,7 @@ class StoryPreviewVC: UIViewController {
         //group.notify(queue: queue) {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                self.startStoryProgress()
+                self.startStoryProgress(direction: "right")
             }
             self.imageArr = localImageArr
       //  }
@@ -141,59 +154,238 @@ class StoryPreviewVC: UIViewController {
     func backVC(){
         self.dismiss(animated: true)
     }
-}
-
-extension StoryPreviewVC{
-    func startStoryProgress(){
-        self.progress.completedUnitCount = 0
-        if let cell = progressCV.cellForItem(at: IndexPath(row: storyIndex, section: 0)) as? StoryProgressCollecionCell{
-            Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { timer in
-                guard self.progress.isFinished == false else{
-                    timer.invalidate()
-                    print("Finished")
-                    self.storyIndex = self.storyIndex + 1
-                    if self.storyIndex == self.imageArr.count{
-                        self.backVC()
-                    }else{
-                        //get cell size
-                        let cellSize = CGSizeMake(self.view.frame.width, self.view.frame.height);
-                        
-                        //get current content Offset of the Collection view
-                        let contentOffset = self.previewCV.contentOffset;
-                        
-                        
-                        let numberOfPages = self.imageArr.count
-                        let currentPage = Int(self.previewCV.contentOffset.x / (self.previewCV.contentSize.width / CGFloat(numberOfPages)))
-                        guard let currentImage = self.imageArr[self.storyIndex] as? String else {
-                            fatalError("Could not find image.")
-                        }
-                        let img = UIImageView()
-                        img.image = UIImage(named: currentImage)
-                        print("item:\(currentImage)")
-                        self.currentImage = img.image!
-                        
-                        
-                        //scroll to next cell
-                        UIView.animate(withDuration: 2.0, delay: 0, options: .curveLinear, animations: { [weak self]() -> Void in
-                            
-                            // self.previewCV.scrollToItem(at: IndexPath(row: self.storyIndex, section: 0), at: .centeredHorizontally, animated: true)
-                        }) { [weak self](finished) -> Void in
-                            self?.previewCV.scrollRectToVisible(CGRectMake(contentOffset.x + cellSize.width, contentOffset.y, cellSize.width, cellSize.height), animated: true);
-                            self?.startStoryProgress()
-                    }
-                       
-                        
-                    }
-                    return
-                }
-                
-                self.progress.completedUnitCount += 1
-                
-                let progressFloat = Float(self.progress.fractionCompleted)
-                cell.progressView.setProgress(progressFloat, animated: true)
-            }
+    
+    @objc func openMoreOptionsPopup(_ sender: UIButton) {
+        print("BUTTON PRESSED")
+        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "StoryOptionsBottomVC") as! StoryOptionsBottomVC
+        self.presentPanModal(vc)
+    }
+    
+    @objc func likeButtonTap(_ sender: UIButton) {
+        print("LIKE STORY")
+        isLikeButtonTapped = !isLikeButtonTapped
+        if isLikeButtonTapped == true {
+            sender.setImage(UIImage(named: "ic-heart-filled"), for: .normal)
+        } else {
+            sender.setImage(UIImage(named: "ic-heart-unfilled"), for: .normal)
         }
     }
+    
+    @objc func shareButtonTap(_ sender: UIButton) {
+        print("SHARE STORY")
+        let shareStr = "Share Your Story"
+        
+        let activityViewController = UIActivityViewController(activityItems: [shareStr], applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        self.present(activityViewController, animated: true)
+    }
+    
+    @objc func tapped(sender: UITapGestureRecognizer)
+      {
+        if let location = sender.location(in: self.view) as? CGPoint{
+        // let touch = touches.first
+        // if let location = touches.location(in: UIScreen.main.focusedView) {
+          let halfScreenWidth = UIScreen.main.bounds.width / 2
+          if location.x < halfScreenWidth {
+            print("Left touch")
+            if self.storyIndex >= 0{
+              if let cell = progressCV.cellForItem(at: IndexPath(row: storyIndex, section: 0)) as? StoryProgressCollecionCell{
+                self.progress.completedUnitCount = 0
+                cell.progressView.progress = 0
+                //cell.progressView.setProgress(0, animated: true)
+              }
+              self.storyIndex = self.storyIndex - 1
+              storyTimer?.invalidate()
+              storyTimer = nil
+              if let cell = progressCV.cellForItem(at: IndexPath(row: storyIndex, section: 0)) as? StoryProgressCollecionCell{
+                self.progress.completedUnitCount = 0
+                cell.progressView.progress = 0
+                if self.imageArr.count > self.storyIndex{
+                  if self.storyIndex >= 0{
+                    guard let currentImage = self.imageArr[self.storyIndex] as? String else {
+                      fatalError("Could not find image.")
+                    }
+                    let img = UIImageView()
+                    img.image = UIImage(named: currentImage)
+                    print("item:\(currentImage)")
+                    self.currentImage = img.image!
+                  }
+                }
+                let cellSize = CGSizeMake(self.view.frame.width, self.view.frame.height);
+                //get current content Offset of the Collection view
+                let contentOffset = self.previewCV.contentOffset;
+                self.previewCV.scrollRectToVisible(CGRectMake(contentOffset.x - cellSize.width, contentOffset.y, cellSize.width, cellSize.height), animated: true);
+                // self.callStoryTimer()
+                //cell.progressView.setProgress(0, animated: true)
+              }
+              self.startStoryProgress(direction: "left")
+              // previousPageTransition()
+            }
+            //Your actions when you click on the left side of the screen
+          } else {
+            print("Right touch")
+            storyTimer?.invalidate()
+            storyTimer = nil
+            if self.imageArr.count > storyIndex{
+              if let cell = progressCV.cellForItem(at: IndexPath(row: storyIndex, section: 0)) as? StoryProgressCollecionCell{
+                self.progress.completedUnitCount = 10
+                cell.progressView.progress = 10
+              }
+              self.storyIndex = self.storyIndex + 1
+              if let cell = progressCV.cellForItem(at: IndexPath(row: storyIndex, section: 0)) as? StoryProgressCollecionCell{
+                self.progress.completedUnitCount = 0
+                cell.progressView.progress = 0
+                // cell.progressView.setProgress(0, animated: true)
+                let cellSize = CGSizeMake(self.view.frame.width, self.view.frame.height);
+                //get current content Offset of the Collection view
+                let contentOffset = self.previewCV.contentOffset;
+                self.previewCV.scrollRectToVisible(CGRectMake(contentOffset.x + cellSize.width, contentOffset.y, cellSize.width, cellSize.height), animated: true);
+              }
+              self.startStoryProgress(direction: "right")
+            }
+            //storyTransition()
+            // Your actions when you click on the right side of the screen
+          }
+        }
+      }
+    
+    @objc func longPressed(sender: UILongPressGestureRecognizer)
+      {
+        if sender.state == .ended {
+          callStoryTimer()
+          isPaused = false
+              //return
+        }else if sender.state == .began {
+          storyTimer?.invalidate()
+          storyTimer = nil
+          isPaused = true
+        }
+      }
+}
+
+extension StoryPreviewVC {
+//    func startStoryProgress(){
+//        self.progress.completedUnitCount = 0
+//        if let cell = progressCV.cellForItem(at: IndexPath(row: storyIndex, section: 0)) as? StoryProgressCollecionCell{
+//            Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { timer in
+//                guard self.progress.isFinished == false else{
+//                    timer.invalidate()
+//                    print("Finished")
+//                    self.storyIndex = self.storyIndex + 1
+//                    if self.storyIndex == self.imageArr.count{
+//                        self.backVC()
+//                    }else{
+//                        //get cell size
+//                        let cellSize = CGSizeMake(self.view.frame.width, self.view.frame.height);
+//
+//                        //get current content Offset of the Collection view
+//                        let contentOffset = self.previewCV.contentOffset;
+//
+//                        let numberOfPages = self.imageArr.count
+//                        let currentPage = Int(self.previewCV.contentOffset.x / (self.previewCV.contentSize.width / CGFloat(numberOfPages)))
+//                        guard let currentImage = self.imageArr[self.storyIndex] as? String else {
+//                            fatalError("Could not find image.")
+//                        }
+//                        let img = UIImageView()
+//                        img.image = UIImage(named: currentImage)
+//                        print("item:\(currentImage)")
+//                        self.currentImage = img.image!
+//
+//
+//                        //scroll to next cell
+//                        UIView.animate(withDuration: 2.0, delay: 0, options: .curveLinear, animations: { [weak self]() -> Void in
+//
+//                            // self.previewCV.scrollToItem(at: IndexPath(row: self.storyIndex, section: 0), at: .centeredHorizontally, animated: true)
+//                        }) { [weak self](finished) -> Void in
+//                            self?.previewCV.scrollRectToVisible(CGRectMake(contentOffset.x + cellSize.width, contentOffset.y, cellSize.width, cellSize.height), animated: true);
+//                            self?.startStoryProgress()
+//                    }
+//
+//
+//                    }
+//                    return
+//                }
+//
+//                self.progress.completedUnitCount += 1
+//
+//                let progressFloat = Float(self.progress.fractionCompleted)
+//                cell.progressView.setProgress(progressFloat, animated: true)
+//            }
+//        }
+//    }
+    
+    func startStoryProgress(direction:String){
+        self.progress.completedUnitCount = 0
+        if let cell = progressCV.cellForItem(at: IndexPath(row: storyIndex, section: 0)) as? StoryProgressCollecionCell{
+          cell.progressView.setProgress(0, animated: true)
+          callStoryTimer()
+        }
+      }
+    
+    @objc func storyStartsTimerFunc() {
+        // storyTimer.invalidate()
+    //      self.storyTimer?.invalidate()
+        if let cell = progressCV.cellForItem(at: IndexPath(row: storyIndex, section: 0)) as? StoryProgressCollecionCell{
+          guard self.progress.isFinished == false else{
+            //self.storyTimer?.invalidate()
+            print("Finished")
+            self.storyTimer = nil
+            self.storyTimer?.invalidate()
+            //      if direction == "left"{
+            //        self.storyIndex = self.storyIndex - 1
+            //      }else{
+                    self.storyIndex = self.storyIndex + 1
+            //      }
+            if self.storyIndex == self.imageArr.count{
+              self.backVC()
+            }else{
+              if self.imageArr.count > self.storyIndex{
+                let cellSize = CGSizeMake(self.view.frame.width, self.view.frame.height);
+                //get current content Offset of the Collection view
+                let contentOffset = self.previewCV.contentOffset;
+                let numberOfPages = self.imageArr.count
+                let currentPage = Int(self.previewCV.contentOffset.x / (self.previewCV.contentSize.width / CGFloat(numberOfPages)))
+                if self.imageArr.count > self.storyIndex{
+                  if self.storyIndex >= 0{
+                    guard let currentImage = self.imageArr[self.storyIndex] as? String else {
+                      fatalError("Could not find image.")
+                    }
+                    let img = UIImageView()
+                    img.image = UIImage(named: currentImage)
+                    print("item:\(currentImage)")
+                    self.currentImage = img.image!
+                    //scroll to next cell
+                    UIView.animate(withDuration: 2.0, delay: 0, options: .curveLinear, animations: { [weak self]() -> Void in
+                    }) { [weak self](finished) -> Void in
+                      //                  if direction == "left"{
+                      //                    self?.previewCV.scrollToItem(at: IndexPath(row: self?.storyIndex ?? 0, section: 0), at: .centeredHorizontally, animated: true)
+                      //
+                      //                  }else{
+                      self?.previewCV.scrollRectToVisible(CGRectMake(contentOffset.x + cellSize.width, contentOffset.y, cellSize.width, cellSize.height), animated: true);
+                      self?.startStoryProgress(direction: "right")
+                      //self?.storyStartsTimerFunc()
+                      //}
+                    }
+                  }
+                }
+              }
+            }
+            return
+          }
+            //self.storyTransition()
+            self.progress.completedUnitCount += 1
+          print("Story index:\(self.storyIndex)")
+            let progressFloat = Float(self.progress.fractionCompleted)
+            cell.progressView.setProgress(progressFloat, animated: true)
+          }
+          return
+        }
+    
+    func callStoryTimer(){
+        if self.storyTimer == nil{
+          storyTimer = Timer.scheduledTimer(timeInterval: 0.4, target: self, selector: #selector(storyStartsTimerFunc), userInfo: nil, repeats: true)
+        }
+      }
 }
 extension StoryPreviewVC:UICollectionViewDelegate,UICollectionViewDataSource{
     
@@ -213,7 +405,9 @@ extension StoryPreviewVC:UICollectionViewDelegate,UICollectionViewDataSource{
             return cell
         }else{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "StoryPreviewCollecionCell", for: indexPath) as! StoryPreviewCollecionCell
-            previewCV.addGestureRecognizer(longPress_gesture)
+            cell.isUserInteractionEnabled = true
+//            previewCV.addGestureRecognizer(longPress_gesture)
+            
             //cell.backgroundColor = UIColor.clear
             //cell.contentView.backgroundColor = .clear
             
@@ -229,7 +423,17 @@ extension StoryPreviewVC:UICollectionViewDelegate,UICollectionViewDataSource{
             }else{
                 cell.bottomGradientIV.backgroundColor = getAverageColor
             }
-
+            cell.storyLikeButton.tag = indexPath.row
+            cell.storyShareButton.tag = indexPath.row
+            cell.moreOptionButton.tag = indexPath.row
+            cell.storyLikeButton.addTarget(self, action: #selector(likeButtonTap(_:)), for: .touchUpInside)
+            cell.storyShareButton.addTarget(self, action: #selector(shareButtonTap(_:)), for: .touchUpInside)
+            cell.moreOptionButton.addTarget(self, action: #selector(openMoreOptionsPopup(_:)), for: .touchUpInside)
+            
+            let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
+                  cell.contentView.addGestureRecognizer(tapGestureRecognizer)
+                  let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressed))
+                  cell.contentView.addGestureRecognizer(longPressRecognizer)
             
             return cell
         }

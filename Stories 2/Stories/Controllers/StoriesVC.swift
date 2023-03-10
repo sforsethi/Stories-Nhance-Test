@@ -109,15 +109,9 @@ extension StoriesVC: UICollectionViewDelegate, UICollectionViewDataSource, UICol
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "StoryViewVC") as! StoryViewVC
-//        vc.retailerLogos = retailerLogos[indexPath.row]
-//        vc.retailerNames = retailerNames[indexPath.row]
-//        vc.storyItems = storyItems[indexPath.row]
-//        vc.modalPresentationStyle = .fullScreen
-//        self.present(vc, animated: true)
-            let vc = storyboard?.instantiateViewController(withIdentifier: "StoryPreviewVC") as! StoryPreviewVC
-            vc.totalStoryIndex = storiesCount[indexPath.row]
-            vc.modalPresentationStyle = .fullScreen
-            self.present(vc, animated: true)
+        let vc = storyboard?.instantiateViewController(withIdentifier: "StoryPreviewVC") as! StoryPreviewVC
+        vc.totalStoryIndex = storiesCount[indexPath.row]
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true)
     }
 }
