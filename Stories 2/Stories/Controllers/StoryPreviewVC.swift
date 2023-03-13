@@ -41,12 +41,12 @@ class StoryPreviewVC: UIViewController {
     
     let progress = Progress(totalUnitCount: 10)
     
-    private lazy var longPress_gesture: UILongPressGestureRecognizer = {
-        let lp = UILongPressGestureRecognizer.init(target: self, action: #selector(didLongPress(_:)))
-        lp.minimumPressDuration = 0.2
-        lp.delegate = self
-        return lp
-    }()
+//    private lazy var longPress_gesture: UILongPressGestureRecognizer = {
+//        let lp = UILongPressGestureRecognizer.init(target: self, action: #selector(didLongPress(_:)))
+//        lp.minimumPressDuration = 0.2
+//        lp.delegate = self
+//        return lp
+//    }()
     
     var storyIndex:Int = 0
     var totalStoryIndex:Int = 1
@@ -57,6 +57,7 @@ class StoryPreviewVC: UIViewController {
     
     var isLikeButtonTapped = false
     var isPaused: Bool = false
+    var isMoreOptionTapped = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -143,6 +144,15 @@ class StoryPreviewVC: UIViewController {
         self.previewCV.reloadData()
         // Do any additional setup after loading the view.
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isMoreOptionTapped {
+            callStoryTimer()
+            isPaused = false
+            isMoreOptionTapped = false
+        }
+    }
 
     @IBAction func cancelBtnTap(_ sender: Any) {
         backVC()
@@ -157,12 +167,16 @@ class StoryPreviewVC: UIViewController {
     
     @objc func openMoreOptionsPopup(_ sender: UIButton) {
         print("BUTTON PRESSED")
+        isMoreOptionTapped = true
+        storyTimer?.invalidate()
+        storyTimer = nil
+        isPaused = true
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "StoryOptionsBottomVC") as! StoryOptionsBottomVC
         self.presentPanModal(vc)
     }
     
     @objc func likeButtonTap(_ sender: UIButton) {
-        print("LIKE STORY")
+        print("LIKE STORY", sender.tag)
         isLikeButtonTapped = !isLikeButtonTapped
         if isLikeButtonTapped == true {
             sender.setImage(UIImage(named: "ic-heart-filled"), for: .normal)
@@ -173,11 +187,17 @@ class StoryPreviewVC: UIViewController {
     
     @objc func shareButtonTap(_ sender: UIButton) {
         print("SHARE STORY")
+        storyTimer?.invalidate()
+        storyTimer = nil
+        isPaused = true
         let shareStr = "Share Your Story"
-        
         let activityViewController = UIActivityViewController(activityItems: [shareStr], applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view
-        self.present(activityViewController, animated: true)
+        activityViewController.completionWithItemsHandler = { (activityType, completed:Bool, returnedItems:[Any]?, error: Error?) in
+            self.callStoryTimer()
+            self.isPaused = false
+        }
+        self.present(activityViewController, animated: true, completion: nil)
     }
     
     @objc func tapped(sender: UITapGestureRecognizer)
